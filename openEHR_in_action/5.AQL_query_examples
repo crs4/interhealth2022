@@ -1,0 +1,92 @@
+
+1)Retrieve all compsitions and the corresponding ehr_ids for a given template_id
+
+select c/uid/value,
+c/ehr_id/value
+from EHR e
+contains COMPOSITION c
+where c/archetype_details/template_id/value='{{TEMPLATE_ID}}'
+
+2)  Retrieve all the compositions for a patient given the ehr_id 
+
+select
+    c/uid/value as uid
+from EHR e
+contains COMPOSITION c
+where e/ehr_id/value = '{{EHR_ID}}' 
+
+3)For each patient in the registry, retrieve alla the laboratory results (analyte name and code, value, reference range)
+
+select
+    e/ehr_id/value as EHR_id,
+    c/uid/value as composition_id,
+    c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.case_identification.v0, 'Registry identifier']/items[at0001]/value/value as registry_id,
+    c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.case_identification.v0, 'IHSS identifier']/items[at0001]/value/value as IHSS_id,
+    c/content[openEHR-EHR-SECTION.adhoc.v1, 'Laboratory tests']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0024]/value/value as analyte_name,
+    c/content[openEHR-EHR-SECTION.adhoc.v1, 'Laboratory tests']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0024]/value/defining_code/code_string as code,
+    c/content[openEHR-EHR-SECTION.adhoc.v1, 'Laboratory tests']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0024]/value/defining_code/terminology_id/value as terminology_id,
+    c/content[openEHR-EHR-SECTION.adhoc.v1, 'Laboratory tests']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0001]/value/value as value,
+    c/content[openEHR-EHR-SECTION.adhoc.v1, 'Laboratory tests']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0004]/value/value as reference_range
+from EHR e
+contains COMPOSITION c
+contains CLUSTER a_a[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]
+limit 100
+
+4)Retrieve all the patients (identifiers, composition_id and ehr_id) for whom the laboratory test is coded with LOINC and corresponds to a specific analyte (e.g., white blood cell - LP7720-8)
+
+select
+    e/ehr_id/value as EHR_id,
+    c/uid/value as composition_id,
+    c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.case_identification.v0, 'Registry identifier']/items[at0001]/value/value as registry_id,
+    c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.case_identification.v0, 'IHSS identifier']/items[at0001]/value/value as IHSS_id,
+    c/content[openEHR-EHR-SECTION.adhoc.v1, 'Laboratory tests']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0024]/value/defining_code/code_string as analyte,
+    c/content[openEHR-EHR-SECTION.adhoc.v1, 'Laboratory tests']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0001]/value/value as value
+from EHR e
+contains COMPOSITION c
+contains CLUSTER a_a[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]
+where
+    c/content[openEHR-EHR-SECTION.adhoc.v1, 'Laboratory tests']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0024]/value/defining_code/code_string='LP7720-8' and
+    c/content[openEHR-EHR-SECTION.adhoc.v1, 'Laboratory tests']/items[openEHR-EHR-OBSERVATION.laboratory_test_result.v1]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.laboratory_test_analyte.v1]/items[at0024]/value/defining_code/terminology_id/value='LOINC'
+limit 100
+
+5)Retrieve all the patients (composition_id and ehr_id), date of birth, Country and date of death for patients who had a specific ICD-10 code of an adverse reaction (e.g., 'T88.6')
+
+select
+   e/ehr_id/value as EHR_id,
+   c/uid/value as composition_id,
+   c/content[openEHR-EHR-SECTION.adhoc.v1, 'Demographic']/items[openEHR-EHR-EVALUATION.birth_summary.v0]/data[at0001]/items[at0004]/value/value as date_of_birth,
+   c/content[openEHR-EHR-SECTION.adhoc.v1, 'Demographic']/items[openEHR-EHR-EVALUATION.birth_summary.v0]/data[at0001]/items[at0002]/value/value as country,
+   c/content[openEHR-EHR-SECTION.adhoc.v1, 'Demographic']/items[openEHR-EHR-EVALUATION.death_summary.v0]/data[at0001]/items[at0092]/value/value as date_of_death
+from EHR e
+contains composition c
+where c/content[openEHR-EHR-SECTION.adhoc.v1, 'Adverse reactions']/items[openEHR-EHR-OBSERVATION.adverse_reaction_monitoring.v0]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.adverse_reaction_event_summary.v0]/items[at0006]/value/defining_code/code_string = 'T88.6' and c/content[openEHR-EHR-SECTION.adhoc.v1, 'Adverse reactions']/items[openEHR-EHR-OBSERVATION.adverse_reaction_monitoring.v0]/data[at0001]/events[at0002]/data[at0003]/items[openEHR-EHR-CLUSTER.adverse_reaction_event_summary.v0]/items[at0006]/value/defining_code/terminology_id/value='ICD-10'
+
+6)Retrieve all dead patients
+
+select
+   e/ehr_id/value as EHR_id,
+   c/uid/value as composition_id,
+   c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.case_identification.v0, 'Registry identifier']/items[at0001]/value/value as registry_id,
+   c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.case_identification.v0, 'IHSS identifier']/items[at0001]/value/value as IHSS_id,
+   c/content[openEHR-EHR-SECTION.adhoc.v1, 'Demographic']/items[openEHR-EHR-EVALUATION.death_summary.v0]/data[at0001]/items[at0092]/value/value  as date_of_death
+from EHR e
+contains COMPOSITION c
+where c/content[openEHR-EHR-SECTION.adhoc.v1, 'Demographic']/items[openEHR-EHR-EVALUATION.death_summary.v0]/data[at0001]/items[at0092]/value/value != ' '
+
+
+7)Retrieve all dead patients for whom the primary tumor has been graded T0, T1 or T2
+
+select
+   e/ehr_id/value as EHR_id,
+   c/uid/value as composition_id,
+   c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.case_identification.v0, 'Registry identifier']/items[at0001]/value/value as registry_id,
+   c/context/other_context[at0001]/items[openEHR-EHR-CLUSTER.case_identification.v0, 'IHSS identifier']/items[at0001]/value/value as IHSS_id,
+   c/content[openEHR-EHR-SECTION.adhoc.v1, 'Demographic']/items[openEHR-EHR-EVALUATION.death_summary.v0]/data[at0001]/items[at0092]/value/value  as date_of_death,
+   c/content[openEHR-EHR-SECTION.adhoc.v1, 'Condition']/items[openEHR-EHR-EVALUATION.problem_diagnosis.v1, 'Primary diagnosis']/data[at0001]/items[openEHR-EHR-CLUSTER.tnm-pathological.v1]/items[at0003.1]/value/value as pT
+from EHR e
+contains COMPOSITION c
+where c/content[openEHR-EHR-SECTION.adhoc.v1, 'Condition']/items[openEHR-EHR-EVALUATION.problem_diagnosis.v1, 'Primary diagnosis']/data[at0001]/items[openEHR-EHR-CLUSTER.tnm-pathological.v1]/items[at0003.1]/value/value matches {'T0', 'T1', 'T2'} and c/content[openEHR-EHR-SECTION.adhoc.v1, 'Demographic']/items[openEHR-EHR-EVALUATION.death_summary.v0]/data[at0001]/items[at0092]/value/value != ' '
+
+
+
+
