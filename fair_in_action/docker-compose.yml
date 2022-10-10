@@ -1,0 +1,31 @@
+version: '3'
+services:
+  fdp:
+    image: fairdata/fairdatapoint:1.15
+    volumes:
+      - ./application.yml:/fdp/application.yml:ro
+
+  fdp-client:
+    image: fairdata/fairdatapoint-index-client:1.15
+    ports:
+      - 81:80
+    environment:
+      - FDP_HOST=fdp
+
+  mongo:
+    image: mongo:4.0.12
+    expose:
+      - 27017
+    volumes:
+      - mongo-data:/data/db
+
+  blazegraph:
+    image: metaphacts/blazegraph-basic:2.2.0-20160908.003514-6
+    expose:
+      - 8080
+    volumes:
+      - blazegraph-data:/blazegraph-data
+
+volumes:
+  mongo-data:
+  blazegraph-data:

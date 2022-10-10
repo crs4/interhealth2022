@@ -1,0 +1,10 @@
+repository:
+  type: 5
+  blazegraph:
+    url: http://blazegraph:8080/blazegraph
+instance:
+  clientUrl: http://localhost:81
+  index:  true
+# ping:
+#   endpoint: http://mobydick.crs4.it:10002
+#   interval: 86400000 # milliseconds
