@@ -2,7 +2,7 @@
 1)Retrieve all compsitions and the corresponding ehr_ids for a given template_id
 
 select c/uid/value,
-c/ehr_id/value
+e/ehr_id/value
 from EHR e
 contains COMPOSITION c
 where c/archetype_details/template_id/value='{{TEMPLATE_ID}}'
@@ -13,9 +13,9 @@ select
     c/uid/value as uid
 from EHR e
 contains COMPOSITION c
-where e/ehr_id/value = '{{EHR_ID}}' 
+where e/ehr_id/value = 'e7eff187-f263-44ea-a353-5d3032f5f281' 
 
-3)For each patient in the registry, retrieve alla the laboratory results (analyte name and code, value, reference range)
+3)For each patient in the registry, retrieve all the laboratory results (analyte name and code, value, reference range)
 
 select
     e/ehr_id/value as EHR_id,
