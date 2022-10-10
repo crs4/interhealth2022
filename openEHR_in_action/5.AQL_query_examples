@@ -13,7 +13,7 @@ select
     c/uid/value as uid
 from EHR e
 contains COMPOSITION c
-where e/ehr_id/value = 'e7eff187-f263-44ea-a353-5d3032f5f281' 
+where e/ehr_id/value = '{{EHR_ID}}' 
 
 3)For each patient in the registry, retrieve all the laboratory results (analyte name and code, value, reference range)
 
