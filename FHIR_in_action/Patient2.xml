@@ -1,0 +1,17 @@
+<Patient xmlns="http://hl7.org/fhir">
+    <text>
+        <div xmlns="http://www.w3.org/1999/xhtml">Roberta Gazzarata</div>
+    </text>
+    <identifier>
+       <system value="www.interhealth.com/identifier"/>
+       <value value="roberta.gazzarata"/>
+    </identifier>
+    <name>
+       <use value="official"/>
+       <text value="Roberta Gazzarata"/>
+       <family value="Gazzarata"/>
+       <given value="Roberta"/>
+    </name>
+    <gender value="female"/>
+    <birthDate value="1985-06-04"/>
+ </Patient>
