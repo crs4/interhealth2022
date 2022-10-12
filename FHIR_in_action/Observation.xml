@@ -1,27 +1,24 @@
-<Observation xmlns="http://hl7.org/fhir">
-    <id value="101"/>
-    <meta>
-        <versionId value="1"/>
-        <lastUpdated value="2022-10-09T12:46:15.199+00:00"/>
-        <source value="#WrrZld6yvgFPJLNP"/>
-        <profile value="https://connect.ichom.org/fhir/StructureDefinition/germline-mutation"/>
-    </meta>
-    <status value="final"/>
+<Observation>    
+    <text>
+        <status value="generated"/>
+        <div xmlns="http://www.w3.org/1999/xhtml"> 
+            Diastolic BP for Pat # roberta.gazzarata : 80 mmHg on 2019-04-19T12:00:00+02:00
+        </div>
+    </text>
+        <status value="final"/>
     <code>
         <coding>
-            <system value=" http://loinc.org"/>
-            <code value="50995-0"/>
-            <display value="BRCA1+BRCA2 gene targeted mutation analysis Molgen Doc (Bld/Tiss)"/>
+            <system value="http://loinc.org"/>
+            <code value="8462-4"/>
+            <display value="Diastolic blood pressure"/>
         </coding>
     </code>
     <subject>
-        <reference value="Patient/1"/>
+        <reference value="Patient/4"> </reference>        
     </subject>
-    <valueCodeableConcept>
-        <coding>
-            <system value="http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"/>
-            <code value="NEG"/>
-            <display value="Negative"/>
-        </coding>
-    </valueCodeableConcept>
-</Observation>
+    <effectiveDateTime value="2019-04-19T12:00:00+02:00"/>    
+    <valueQuantity>
+        <value value="80"/>
+        <unit value="mmHg"/>
+    </valueQuantity>            
+</Observation>	
