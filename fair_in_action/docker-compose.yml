@@ -2,7 +2,7 @@ version: '3'
 services:
 
   fdp:
-    image: crs4/fairdatapoint:latest
+    image: crs4/fairdatapoint:stable
     ports:
       - 80
     volumes:
