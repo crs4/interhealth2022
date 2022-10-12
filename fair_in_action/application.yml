@@ -3,7 +3,7 @@ repository:
   blazegraph:
     url: http://blazegraph:8080/blazegraph
 instance:
-  clientUrl: http://<IP_ADDRESS>:8080
+  clientUrl: http://<IP_ADDRESS>:8050
   index:  false
 ping:
   interval: 150000 # milliseconds

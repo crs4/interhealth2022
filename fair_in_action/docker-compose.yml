@@ -11,7 +11,7 @@ services:
   fdp-client:
     image: crs4/fairdatapoint-client:latest
     ports:
-      - 8080:80
+      - 8050:80
     environment:
       - FDP_HOST=fdp
 
