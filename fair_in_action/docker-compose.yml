@@ -2,7 +2,7 @@ version: '3'
 services:
 
   fdp:
-    image: crs4/fairdatapoint:latest
+    image: crs4/fairdatapoint:stable
     ports:
       - 80
     volumes:
@@ -11,7 +11,7 @@ services:
   fdp-client:
     image: crs4/fairdatapoint-client:latest
     ports:
-      - 8080:80
+      - 8050:80
     environment:
       - FDP_HOST=fdp
 
@@ -24,8 +24,8 @@ services:
 
   blazegraph:
     image: metaphacts/blazegraph-basic:2.2.0-20160908.003514-6
-    expose:
-      - 9090:8080
+    ports:
+      - 8888:8080
     volumes:
       - blazegraph-data:/blazegraph-data
 
